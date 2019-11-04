@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Meetapp.Core\Meetapp.Core.csproj" />
+    <ProjectReference Include="..\Meetapp.Services\Meetapp.Services.csproj" />
+    <ProjectReference Include="..\Meetapp.ViewModel\Meetapp.ViewModel.csproj" />
+  </ItemGroup>
+
+</Project>
