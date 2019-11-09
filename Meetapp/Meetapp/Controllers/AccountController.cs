@@ -16,7 +16,7 @@ namespace Meetapp.Controllers
             _userService = userService;
         }
 
-        [HttpPost("user/register")]
+        [HttpPost]
         public async Task<IActionResult> Register(string email, string password)
         {
             var response = await _userService.RegisterAsync(email, password);
