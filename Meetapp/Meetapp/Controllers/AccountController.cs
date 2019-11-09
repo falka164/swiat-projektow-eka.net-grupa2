@@ -8,7 +8,10 @@ using Meetapp.Core.Responses;
 
 namespace Meetapp.Controllers
 {
-    public class AccountController : Controller
+    
+    [ApiController]
+    [Route("[controller]")]
+    public class AccountController : ControllerBase
     {
         private readonly IUserService _userService;
         public AccountController(IUserService userService)
@@ -16,9 +19,16 @@ namespace Meetapp.Controllers
             _userService = userService;
         }
 
-        [HttpPost]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register(string email, string password)
         {
+            if(email==null ||  password==null) //Temporary?
+            {
+                return BadRequest(new AuthFailedResponse
+                {
+                    Errors = new string[]{"Wrong parameters"}
+                });
+            }
             var response = await _userService.RegisterAsync(email, password);
             if(!response.Succes) //failed to create User
             {
