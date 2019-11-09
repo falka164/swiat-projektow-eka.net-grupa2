@@ -8,7 +8,7 @@ namespace Meetapp.Core.Responses
     ///Class used as Succesful response to authorizacion mechanism
     ///Author:Blonski
     ///</summary>
-    class AuthSuccesResponse
+    public class AuthSuccesResponse
     {
         public string Token { get; set; }
         public string RefreshToken { get; set; }

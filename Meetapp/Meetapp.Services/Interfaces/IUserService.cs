@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Meetapp.Core.Responses;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Meetapp.Services.Interfaces
 {
-    interface IUserService
+    public interface IUserService
     {
+        Task<AuthorizationResponse> RegisterAsync(string email, string password);
     }
 }
