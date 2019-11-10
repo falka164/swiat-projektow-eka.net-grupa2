@@ -8,5 +8,7 @@ namespace Meetapp.Core.Entities.User
 {
     public class User : IdentityUser
     {
+     public ICollection<UserEvent> UserEvents { get; set; }
+
     }
 }
