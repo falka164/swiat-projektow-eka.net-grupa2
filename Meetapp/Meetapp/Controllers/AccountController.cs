@@ -24,7 +24,7 @@ namespace Meetapp.Controllers
         {
             if(email==null ||  password==null) //Temporary?
             {
-                return BadRequest(new AuthFailedResponse
+                return BadRequest(new AuthorizationResult
                 {
                     Errors = new string[]{"Wrong parameters"}
                 });
@@ -32,12 +32,32 @@ namespace Meetapp.Controllers
             var response = await _userService.RegisterAsync(email, password);
             if(!response.Succes) //failed to create User
             {
-                return BadRequest(new AuthFailedResponse
+                return BadRequest(new AuthorizationResult
                 { 
                 Errors = response.Errors
                 });
             }
-            return Ok(new AuthSuccesResponse{});
+            return Ok(response);
+        }
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(string email, string password)
+        {
+            if (email == null || password == null) //Temporary?
+            {
+                return BadRequest(new AuthorizationResult
+                {
+                    Errors = new string[] { "Wrong parameters" }
+                });
+            }
+            var response = await _userService.LoginAsync(email, password);
+            if (!response.Succes) //failed to create User
+            {
+                return BadRequest(new AuthorizationResult
+                {
+                    Errors = response.Errors
+                });
+            }
+            return Ok(response);
         }
     }
 }

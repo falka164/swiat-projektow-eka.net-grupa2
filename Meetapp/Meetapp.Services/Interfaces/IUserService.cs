@@ -8,6 +8,8 @@ namespace Meetapp.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<AuthorizationResponse> RegisterAsync(string email, string password);
+        Task<AuthorizationResult> RegisterAsync(string email, string password);
+
+        Task<AuthorizationResult> LoginAsync(string email, string password);
     }
 }

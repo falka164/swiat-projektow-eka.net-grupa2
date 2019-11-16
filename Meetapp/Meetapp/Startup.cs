@@ -1,18 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Meetapp.Core;
 using Meetapp.Core.Entities.User;
 using Meetapp.Services.Interfaces;
 using Meetapp.Services.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Meetapp
 {
@@ -28,7 +32,27 @@ namespace Meetapp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
-            services.AddDefaultIdentity<User>().AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDefaultIdentity<User>().AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("eKaeKaeKaeKaeKaeKaeKaeKaeKaeKaeKaeKaeKaeKaeKa")),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                RequireExpirationTime = false,
+                ValidateLifetime = true
+            };
+            services.AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(x =>
+                {
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = tokenValidationParameters;
+                });
             services.AddScoped<IUserService, UserService>();
         }
 
