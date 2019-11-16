@@ -89,8 +89,35 @@ namespace Meetapp.Services.Services
 
         async Task<Response> IEventService.UpdateEvent(int id, DateTime startDate, DateTime endDate, DateTime saleExpDate, int cost, string title, string location, string category, bool reqConfirm)
         {
-            Response eventResponse = new Response();
-            return eventResponse;
+            EventResponse eventResponse = new EventResponse();
+            Event eventFromDB;
+            eventFromDB = await _dbContext.Events.FindAsync(id);
+
+
+            if (eventFromDB == null)
+            {
+                eventResponse.Errors = new List<string>();
+                eventResponse.Errors.ToList().Add("There is no event with this id");
+                eventResponse.Succes = false;
+
+                return eventResponse;
+            }
+            else
+            {
+                eventFromDB.Title = title;
+                eventFromDB.StartDate = startDate;
+                eventFromDB.EndDate = endDate;
+                eventFromDB.SaleExpDate = saleExpDate;
+                eventFromDB.Location = location;
+                eventFromDB.Category = category;
+                eventFromDB.ReqConfirm = reqConfirm;
+                eventResponse = new EventResponse();
+                _dbContext.Events.Update(eventFromDB);
+                await _dbContext.SaveChangesAsync();
+                eventResponse.Succes = true;
+                eventResponse.eventPayload = eventFromDB;
+                return eventResponse;
+            }
         }
     }
 }

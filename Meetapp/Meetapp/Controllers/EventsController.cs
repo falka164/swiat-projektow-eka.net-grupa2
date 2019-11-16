@@ -49,33 +49,25 @@ namespace Meetapp.Controllers
         // PUT: api/Events/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEvent(int id, Event @event)
+        [HttpPut("Put/{id}")]
+        public async Task<IActionResult> PutEvent(int id, DateTime startDate, DateTime endDate, DateTime saleExpDate, int cost, string title, string location, string category, bool reqConfirm)
         {
-            if (id != @event.Id)
-            {
-                return BadRequest();
-            }
+            Response response = await _eventService.UpdateEvent(
+            id,
+            startDate,
+            endDate, 
+            saleExpDate, 
+            cost, 
+            title, 
+            location,
+            category, 
+            reqConfirm);
 
-            _context.Entry(@event).State = EntityState.Modified;
-
-            try
+            if (!response.Succes)
             {
-                await _context.SaveChangesAsync();
+                return BadRequest(response);
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EventExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            else return Ok(response);
         }
 
         // POST: api/Events
