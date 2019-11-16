@@ -15,6 +15,7 @@ namespace Meetapp.Core
             
         }
         public DbSet<Event> Events { get; set; }
+        public DbSet<UserEvent> UserEvents { get; set; }
 
     }
 }
