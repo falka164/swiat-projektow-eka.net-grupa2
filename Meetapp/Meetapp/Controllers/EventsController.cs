@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -103,19 +103,16 @@ namespace Meetapp.Controllers
         }
 
         // DELETE: api/Events/5
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<ActionResult<Event>> DeleteEvent(int id)
         {
-            var @event = await _context.Events.FindAsync(id);
-            if (@event == null)
+            Response eventResponse = await _eventService.DeleteEvent(id);
+
+            if (!eventResponse.Succes)
             {
-                return NotFound();
+                return BadRequest(eventResponse);
             }
-
-            _context.Events.Remove(@event);
-            await _context.SaveChangesAsync();
-
-            return @event;
+            else return Ok(eventResponse);
         }
 
         private bool EventExists(int id)

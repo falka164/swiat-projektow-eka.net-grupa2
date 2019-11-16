@@ -42,7 +42,25 @@ namespace Meetapp.Services.Services
         async Task<Response> IEventService.DeleteEvent(int id)
         {
             Response eventResponse = new Response();
-            return eventResponse;
+            Event eventFromDB;
+            eventFromDB = await _dbContext.Events.FindAsync(id);
+
+            if (eventFromDB == null)
+            {
+                eventResponse.Errors = new List<string>();
+                eventResponse.Errors.ToList().Add("There is no event with this id");
+                eventResponse.Succes = false;
+
+                return eventResponse;
+            }
+            else
+            {
+                _dbContext.Events.Remove(eventFromDB);
+                await _dbContext.SaveChangesAsync();
+                eventResponse.Succes = true;
+                return eventResponse;
+            }
+
         }
 
         async Task<Response> IEventService.GetEvent(int id)
