@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Meetapp.Core.Migrations
 {
-    public partial class User : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -52,7 +52,14 @@ namespace Meetapp.Core.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EventTitle = table.Column<string>(nullable: true)
+                    Title = table.Column<string>(maxLength: 100, nullable: true),
+                    Description = table.Column<string>(maxLength: 1000, nullable: true),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    EndDate = table.Column<DateTime>(nullable: false),
+                    Location = table.Column<string>(maxLength: 25, nullable: true),
+                    Category = table.Column<string>(maxLength: 25, nullable: true),
+                    SaleExpDate = table.Column<DateTime>(nullable: false),
+                    ReqConfirm = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -165,6 +172,33 @@ namespace Meetapp.Core.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserEvents",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserRole = table.Column<string>(nullable: false),
+                    EventFK = table.Column<int>(nullable: false),
+                    UserFK = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserEvents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserEvents_Events_EventFK",
+                        column: x => x.EventFK,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserEvents_AspNetUsers_UserFK",
+                        column: x => x.UserFK,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -203,6 +237,16 @@ namespace Meetapp.Core.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserEvents_EventFK",
+                table: "UserEvents",
+                column: "EventFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserEvents_UserFK",
+                table: "UserEvents",
+                column: "UserFK");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -223,10 +267,13 @@ namespace Meetapp.Core.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Events");
+                name: "UserEvents");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Events");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

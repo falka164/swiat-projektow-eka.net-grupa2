@@ -16,7 +16,7 @@ namespace Meetapp.Services.Services
         private readonly UserManager<User> _userManager;
         public UserService(UserManager<User> userManager)
         {
-            _userManager = userManager;              
+            _userManager = userManager;
         }
         public async Task<AuthorizationResponse> RegisterAsync(string email, string password)
         {

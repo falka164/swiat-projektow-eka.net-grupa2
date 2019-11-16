@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Meetapp.Core.Responses
 {
-    public class AuthorizationResponse : Response
+    public class Response
     {
         public bool Succes { get; set; }
         public IEnumerable<string> Errors { get; set; }
